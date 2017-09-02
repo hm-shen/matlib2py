@@ -1,5 +1,7 @@
 import numbers
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def lowpass_cosine_filter_coeff(cut_off_freq, num_of_coeffs):
     tmp = np.linspace(1, num_of_coeffs, num_of_coeffs)
@@ -53,4 +55,45 @@ def spectral_filtering(time_series, window):
     ts_filtered = np.real(np.fft.ifft(fft_ts_filtered))
 
     return ts_filtered, fft_ts
+
+def moving_average(time_series, num_of_points):
+
+    ''' init parameters '''
+    begin_ind = int(np.ceil(num_of_points / 2.)) - 1
+    end_ind = len(time_series)- int(np.floor(num_of_points / 2.) + 1)
+    selected_ind = np.linspace(begin_ind, end_ind, (end_ind - begin_ind)+1)
+
+    ''' calculate moving sum using cumsum '''
+    cumsum_of_ts = np.cumsum(np.insert(time_series,0,0))
+    move_avg = (cumsum_of_ts[num_of_points:] -\
+            cumsum_of_ts[:-num_of_points]) / float(num_of_points)
+
+    return move_avg, selected_ind
+
+def kz_low_pass(data, m_points, k_iters):
+
+    t = np.linspace(1,len(data), len(data))
+    mov_avg = data
+
+    for index in range(k_iters):
+        inner_mov_avg, tmp = moving_average(mov_avg, m_points)
+        t = t[0] + tmp
+        mov_avg = inner_mov_avg
+
+    return mov_avg, (t - 1).astype(int)
+
+def power_spectral(signal, num_of_points, plot_flag=True):
+
+    # fft
+    sig_freq = np.fft.fft(signal, num_of_points)
+    power_sig = sig_freq * np.conjugate(sig_freq) / num_of_points
+    freq = len(signal) * np.linspace(0,num_of_points/2,1+num_of_points/2) /  num_of_points
+
+    if plot_flag:
+        plt.figure()
+        plt.plot(freq, power_sig[: int(np.floor(num_of_points/2.) + 1)])
+        plt.title('Frequency content of signal')
+        plt.xlabel('frequency (Hz)')
+
+    return freq, power_sig
 

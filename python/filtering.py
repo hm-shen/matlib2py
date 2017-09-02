@@ -4,6 +4,7 @@ filtering lib
 import numbers
 import numpy as np
 import utils as utl
+import matplotlib.pyplot as plt
 
 '''
 Python implementation of lanczos filtering
@@ -67,27 +68,42 @@ def lanczos_filter(time_series, spl_intvl=1, cut_off_freq=None,\
 
     return filtered_ts, lanczos_coeff, window, fft_ts, freq
 
+    '''
+    Python implementation of eval_KZ_choice
+    '''
+def eval_kz_choice(length, kz_choice, mode='low'):
 
-'''
-Python implementation of moving_average
-'''
+    ''' input checking '''
+    assert isinstance(kz_choice,(np.ndarray)) & (kz_choice.shape == (2,)), \
+            'Error: kz_choice has to be a two element 1d array'
 
-def moving_average(time_series, num_of_points):
+    ''' create a delta function '''
+    delta = np.zeros(length)
 
-    ''' init parameters '''
-    begin_ind = int(np.ceil(num_of_points / 2.)) - 1
-    end_ind = len(time_series)- int(np.floor(num_of_points / 2.) + 1)
-    selected_ind = np.linspace(begin_ind, end_ind, (end_ind - begin_ind)+1)
+    if (length % 2 == 0) : #even
+        delta[int(length / 2.0)] = 1e8
+    else : # odd
+        delta[np.ceil(length / 2.) - 1] = 1e8
 
-    ''' calculate moving sum using cumsum '''
-    cumsum_of_ts = np.cumsum(np.insert(time_series,0,0))
-    move_avg = (cumsum_of_ts[num_of_points:] -\
-            cumsum_of_ts[:-num_of_points]) / float(num_of_points)
+    freq, power_delta = utl.power_spectral(delta, len(delta))
 
-    return move_avg, selected_ind
+    mov_avg, t = utl.kz_low_pass(delta, kz_choice[0], kz_choice[1])
 
-'''
-Python implementation of KZ_low_pass
-'''
+    if mode == 'high':
+        mov_avg = delta[t] - mov_avg
 
-# def kz_low_pass(
+    freq2, power_mov = utl.power_spectral(mov_avg, len(delta))
+
+    cutperiod = length / (np.argmin(np.absolute(power_delta[1] * np.exp(-1) - \
+        power_mov)) + 1)
+
+    plt.show()
+    return cutperiod
+
+
+
+
+
+
+
+
