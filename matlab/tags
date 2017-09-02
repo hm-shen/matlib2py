@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+KZ_low_pass	KZ_low_pass.m	/^function [aout, t1] = KZ_low_pass(data, f1);$/;"	f
+eval_KZ_choice	eval_KZ_choice.m	/^function cutperiod = eval_KZ_choice(len, kzchoice, str)$/;"	f
+lanczos_filter_coef	lanczosfilter.m	/^function coef = lanczos_filter_coef(Cf,M)$/;"	f
+lanczosfilter	lanczosfilter.m	/^function [y,coef,window,Cx,Ff] = lanczosfilter(x,varargin)$/;"	f
+lowpass_cosine_filter_coef	lanczosfilter.m	/^function coef = lowpass_cosine_filter_coef(Cf,M)$/;"	f
+moving_average	moving_average.m	/^function [moveav, tnew] = moving_average(d, t)$/;"	f
+moving_average_2	moving_average_2.m	/^function [moveav, tnew] = moving_average_2(d, t)$/;"	f
+spectral_filtering	lanczosfilter.m	/^function [y,Cx] = spectral_filtering(x,window)$/;"	f
+spectral_window	lanczosfilter.m	/^function [window,Ff] = spectral_window(coef,N)$/;"	f
